@@ -1,0 +1,19 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.~*.*#
+
+# markdown
+*.html
+
+
+# python flask
+# ############
+
+*.pyc
+*.swp
+*.swo
+*.old
+__pycache__
+
