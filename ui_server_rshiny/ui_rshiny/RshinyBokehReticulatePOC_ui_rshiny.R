@@ -7,7 +7,7 @@ RshinyBokehReticulatePOC_ui_rshiny<-
       '
       ),
       useShinyjs(),
-
+      
       HTML(
         "
                   <script>
@@ -52,14 +52,15 @@ RshinyBokehReticulatePOC_ui_rshiny<-
         functions = c("bokeh_graph1")
         
       ),
-      tags$input(id="api_datasinus_ajax_url", type="text", value="", class="shiny-bound-input", style="display:noneXXX;"),      
-      tags$input(id="api_bokehinlinejs_ajax_url", type="text", value="", class="shiny-bound-input", style="display:noneXX;"),      
-
+      tags$input(id="api_datasinus_ajax_url", type="text", value="", class="shiny-bound-input", style="display:none;"),      
+      tags$input(id="api_bokehinlinejs_ajax_url", type="text", value="", class="shiny-bound-input", style="display:none;"),      
+      
     ),
     splitLayout(
       div(id="bokeh_ch1"),
-      div(),
+      div(tableOutput('data_HistoryArray')),
       div(id="bokeh_ch2"),
-      cellWidths =c("25%","50%","25%")                                       
+      cellWidths =c("40%","20%","40%")  ,
+      cellArgs = list(align = "center")
     )
   )

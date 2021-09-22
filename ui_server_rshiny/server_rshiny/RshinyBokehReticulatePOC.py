@@ -1,11 +1,10 @@
 from bokeh.embed import json_item, components
 from bokeh.plotting import figure, curdoc
 from bokeh.models.sources import AjaxDataSource, ColumnDataSource
-# 
+
+#
 
 from bokeh.models import CustomJS
-
-# from bokeh.models.widgets import Div
 
 bokeh_tool_tips = [
     ("index", "$index"),
@@ -14,47 +13,6 @@ bokeh_tool_tips = [
 ]
 
 bokeh_tool_list = ['pan,wheel_zoom,lasso_select,reset']
-
-import math
-import json
-
-# py$session =list(x = 0, y = 0, HistoryArray = list(list(x = 0, y = 0)))
-
-# def initialize():
-#     session.clear()
-#     if not session.get('x'):
-#         session['x'] = 0
-#     if not session.get('y'):
-#         session['y'] = 0
-#     if not session.get('HistoryArray'):
-#         session['HistoryArray'] = [{'x': None, 'y': None}]
-
-def api_datasinus(session={}, operation='' ):
-        if not session.get('x'):
-            session['x'] = 0
-        if not session.get('y'):
-            session['y'] = 0
-        if not session.get('HistoryArray'):
-            session['HistoryArray'] = [{'x': None, 'y': None}]
-
-        # global x, y
-        if operation == 'increment':
-            session['x'] = session['x'] + 0.1
-
-        session['y'] = math.sin(session['x'])
-
-        if operation == 'increment':
-            session['HistoryArray'].append({'x': session['x'], 'y': session['y']})
-            return  session['HistoryArray']# jsonify(x=[session['x']], y=[session['y']])
-        else:
-            response_object = {'status': 'success'}
-            # malist[-10:] last n elements
-            # malist[::-1] reversing using list slicing
-            session['HistoryArray'] = session['HistoryArray'][-10:]
-            response_object['sinus'] = session['HistoryArray'][::-1]
-            #rep=jsonify(response_object) replaced in R by RJSONIO:::toJSON( 
-            rep=(response_object)
-        return rep
 
 
 def api_bokehinlinejs(data_url):
@@ -118,4 +76,3 @@ def api_bokehinlinejs(data_url):
     response_object['gr']['script'] = script
     response_object['gr']['div'] = div
     return response_object
-

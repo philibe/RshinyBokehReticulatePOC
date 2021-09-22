@@ -44,14 +44,7 @@ api_datasinus <- function (var_session_param,operation) {
   }
 }
 
-# to test in internet browser js console:
-# var req = new XMLHttpRequest();
-# req.overrideMimeType("application/json");
-# 
-# # # within rstudio in "open in internet browser" mode where YYYY is the web service part of the rstudio given by Rstudio
-# req.open("POST","http://192.168.1.XXXX:8787/p/YYYY/"+api_datasinus_ajax_url+'&operation=increment',true)
-# req.send()
-# var jsonResponse = JSON.parse(req.responseText);
+
 api_datasinus_ajax_url_react <- reactive({
   ajax_url=  session$registerDataObj(
     data= NA,
@@ -66,19 +59,20 @@ api_datasinus_ajax_url_react <- reactive({
         200, "application/json",
         {
           response_object =list()
+          react$var_session_param <- var_session <-api_datasinus(isolate(react$var_session_param),operationQueryParam)
           
-          session$userData$var_session_param <-api_datasinus(session$userData$var_session_param,operationQueryParam)
           
           if (operationQueryParam=='increment') {
             
             response_object =list(
-              x=as.array( session$userData$var_session_param[['x']]),
-              y=as.array(session$userData$var_session_param[['y']])
+              x=as.array( var_session[['x']]),
+              y=as.array(var_session[['y']])
             )
             
           } else {
+            # others things but if we could reactive R Shiny and not registerDataObj(), "read" operation will not be read here
             response_object [['status']]='success'
-            response_object [['sinus']]=session$userData$var_session_param[['HistoryArray']]                    
+            response_object [['sinus']]=var_session[['HistoryArray']]                    
             
           }
           
@@ -107,18 +101,7 @@ observeEvent(
 )   
 
 
-# to test in internet browser js console:
-# var req = new XMLHttpRequest();
-# req.overrideMimeType("application/json");
-# # without ProxyPass
-# req.open("POST", "http://192.168.1.XXX:3838/apps/RshinyBokehReticulatePOC/"+api_bokehinlinejs_ajax_url, true)
-# # # with ProxyPass
-# req.open("POST", "http://192.168.1.XXX/shiny/apps/RshinyBokehReticulatePOC/"+api_bokehinlinejs_ajax_url, true)
-# 
-# # # within rstudio in "open in internet browser" mode where YYYY is the web service part of the rstudio given by Rstudio
-# req.open("POST", "http://192.168.1.XXX:8787/p/YYYY/"+api_bokehinlinejs_ajax_url, true)
-# req.send()
-# var jsonResponse = JSON.parse(req.responseText);
+
 
 
 
@@ -150,13 +133,12 @@ api_bokehinlinejs_ajax_url_react <- reactive({
 })
 
 All_Ajax_registerDataObj_filled<-reactive ({
-
+  
   if(DescTools::Coalesce(input$api_bokehinlinejs_ajax_url_loaded,"") !="" & DescTools::Coalesce(input$api_datasinus_ajax_url_loaded,"") !="") {
     TRUE
   } else {
     NULL
   }
-  
 })
 
 
@@ -167,10 +149,6 @@ observeEvent(
   All_Ajax_registerDataObj_filled()
   , {
     
-    
-    
-    print(input$api_bokehinlinejs_ajax_url)
-    print(input$api_bokehinlinejs_ajax_url_loaded)
     shinyjs::js$bokeh_graph1()
     
     
@@ -178,4 +156,27 @@ observeEvent(
 )
 
 
+data_HistoryArray <- shiny::reactivePoll(1000, session,
+                                         checkFunc=
+                                           function() {
+                                             TRUE
+                                           }
+                                         ,
+                                         valueFunc=function() {
+                                           react$var_session_param[['HistoryArray']]   
+                                         }
+)
 
+output$data_HistoryArray <- renderTable({
+  
+  as.data.frame(
+    do.call(
+      rbind, 
+      lapply(
+        data_HistoryArray(), 
+        as.vector
+      )
+    )
+  )
+  
+})
