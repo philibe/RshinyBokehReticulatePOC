@@ -31,7 +31,7 @@ Sh shell example for Linux
 ```sh
 sudo su shiny 
 cd
-/bin/sh Anaconda3-2021.05-Linux-x86_64.sh Anaconda3-2021.05-Linux-x86_64.sh
+/bin/sh Anaconda3-2021.05-Linux-x86_64.sh
 . anaconda3/etc/profile.d/conda.sh
 conda create --name rshiny_bokeh_reticulate
 conda activate rshiny_bokeh_reticulate
